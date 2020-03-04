@@ -30,10 +30,11 @@
                     </div>
 
                     <div class="form-group">
+                        
                         <label for="body">
                             本文
                         </label>
-
+                        <input id="user_id" name="user_id" value="{{Auth::id()}}" style="display:none"></input>
                         <textarea
                             id="body"
                             name="body"

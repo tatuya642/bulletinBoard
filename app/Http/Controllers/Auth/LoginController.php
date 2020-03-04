@@ -26,8 +26,8 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
-
+    //protected $redirectTo = RouteServiceProvider::HOME;
+    protected $redirectTo = "/" ;
     /**
      * Create a new controller instance.
      *
@@ -36,5 +36,11 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+    public function logout(\Illuminate\Http\Request $request)
+    {
+        $this->guard()->logout();
+        $request->session()->invalidate();
+        return redirect('/');
     }
 }

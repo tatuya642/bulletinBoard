@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Post;
+use App\User;
+use Auth;
 
 class PostsController extends Controller
 {
@@ -20,11 +22,19 @@ class PostsController extends Controller
 
     public function store(Request $request)
     {
+        if(Auth::check()){
         $params = $request->validate([
             'title' => 'required|max:50',
             'body' => 'required|max:2000',
+            'user_id' => 'required',
         ]);
-
+        }else{
+            $params = $request->validate([
+                'title' => 'required|max:50',
+                'body' => 'required|max:2000',
+            ]);
+        }
+        
         Post::create($params);
 
         return redirect()->route('top');

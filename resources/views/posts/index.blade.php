@@ -20,6 +20,11 @@
                 </div>
                 <div class="card-footer">
                     <span class="mr-2">
+                        @if($post->user_id !== null)
+                            {{$post->user_name($post->user_id) }}
+                        @else
+                            ゲストさん
+                        @endif
                         投稿日時 {{ $post->created_at->format('Y.m.d') }}
                     </span>
 

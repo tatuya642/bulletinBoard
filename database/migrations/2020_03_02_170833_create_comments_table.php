@@ -18,8 +18,10 @@ class CreateCommentsTable extends Migration
             $table->unsignedInteger('post_id');
             $table->text('body');
             $table->timestamps();
+            $table->unsignedInteger('user_id')->nullable();
 
             $table->foreign('post_id')->references('id')->on('posts');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
@@ -28,6 +30,7 @@ class CreateCommentsTable extends Migration
      *
      * @return void
      */
+
     public function down()
     {
         Schema::dropIfExists('comments');
