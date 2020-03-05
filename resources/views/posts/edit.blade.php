@@ -7,7 +7,7 @@
                 投稿の編集
             </h1>
 
-            <form method="POST" action="{{ route('posts.update', ['post' => $post]) }}">
+            <form method="POST" action="{{ route('posts.update', ['post' => $post]) }}" enctype="multipart/form-data" >
                 @csrf
                 @method('PUT')
 
@@ -46,6 +46,18 @@
                                 {{ $errors->first('body') }}
                             </div>
                         @endif
+                    </div>
+
+                    <div class="form-group">
+                        <label for="image">
+                            画像
+                        </label>
+                        @if( $post->image_path != null)
+                            <p class="">
+                                <img src="{{ asset('storage/'.$post->image_path) }}" style="max-width:25%; max-height:30%" />
+                            </p>
+                        @endif
+                        <input type="file" name="imagefile" id="image" />
                     </div>
 
                     <div class="mt-5">

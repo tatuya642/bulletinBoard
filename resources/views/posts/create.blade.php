@@ -7,10 +7,12 @@
                 投稿の新規作成
             </h1>
 
-            <form method="POST" action="{{ route('posts.store') }}">
+            <form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data" >
                 @csrf
 
                 <fieldset class="mb-4">
+                    {{--記入者のユーザーid--}}
+                    <input id="user_id" name="user_id" value="{{Auth::id()}}" style="display:none"></input>
                     <div class="form-group">
                         <label for="title">
                             タイトル
@@ -34,7 +36,6 @@
                         <label for="body">
                             本文
                         </label>
-                        <input id="user_id" name="user_id" value="{{Auth::id()}}" style="display:none"></input>
                         <textarea
                             id="body"
                             name="body"
@@ -46,6 +47,13 @@
                                 {{ $errors->first('body') }}
                             </div>
                         @endif
+                    </div>
+                    <div class="form-group">
+                        画像<br/>
+                        {{--{!! Form::open(['url' => '/upload', 'method' => 'post', 'files' => true]) !!}
+                        {!! Form::label('file', '画像アップロード', ['class' => 'control-label']) !!}
+                        {!! Form::file('file') !!}--}}
+                        <input type="file" name="imagefile" id="image" />
                     </div>
 
                     <div class="mt-5">

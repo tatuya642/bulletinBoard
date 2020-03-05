@@ -12,7 +12,7 @@
     >
 </head>
 <body>
-    <header class="navbar navbar-dark bg-dark">
+    <header class="navbar navbar-dark bg-dark sticky-top">
         <div class="container">
             <a class="navbar-brand" href="{{ url('') }}">
                 Laravel BBS

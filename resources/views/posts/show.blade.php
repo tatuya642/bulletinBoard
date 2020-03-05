@@ -3,31 +3,40 @@
 @section('content')
     <div class="container mt-4">
         <div class="border p-4">
+            
             <h1 class="h5 mb-4">
                 {{ $post->title }}
             </h1>
-
             <p class="mb-5">
                 {!! nl2br(e($post->body)) !!}
             </p>
-            @if($post->user_id == Auth::id())
-            <div class="mb-4 text-right">
-                <a class="btn btn-primary" href="{{ route('posts.edit', ['post' => $post]) }}">
-                    編集する
-                </a>
-            
-                <form
-                    style="display: inline-block;"
-                    method="POST"
-                    action="{{ route('posts.destroy', ['post' => $post]) }}"
-                >
-                    @csrf
-                    @method('DELETE')
-
-                    <button class="btn btn-danger">削除する</button>
-                </form>
-            </div>
+            @if( $post->image_path != null)
+            <p class="">
+                <img src="{{ asset('storage/'.$post->image_path) }}" style="max-width:25%; max-height:30%" />
+            </p>
             @endif
+            <div class="mb-4 ">
+                <a href="/" class="btn btn-outline-primary">お気に入りに追加</a>
+                @if($post->user_id == Auth::id())
+                    <div class="float-right">
+                    <a class="btn btn-primary" href="{{ route('posts.edit', ['post' => $post]) }}">
+                        編集する
+                    </a>
+                
+                    <form
+                        style="display: inline-block;"
+                        method="POST"
+                        action="{{ route('posts.destroy', ['post' => $post]) }}"
+                    >
+                        @csrf
+                        @method('DELETE')
+
+                        <button class="btn btn-danger">削除する</button>
+                    </form>
+                </dic>
+                @endif
+            </div>
+            
             <section>
                 <h2 class="h5 mb-4">
                     コメント

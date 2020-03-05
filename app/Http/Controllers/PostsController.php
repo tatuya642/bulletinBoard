@@ -27,23 +27,48 @@ class PostsController extends Controller
             'title' => 'required|max:50',
             'body' => 'required|max:2000',
             'user_id' => 'required',
+            'imagefile' => [
+                // アップロードされたファイルであること
+                'file',
+                // 画像ファイルであること
+                'image',
+                // MIMEタイプを指定
+                'mimes:jpeg,png',
+            ]
         ]);
         }else{
             $params = $request->validate([
                 'title' => 'required|max:50',
                 'body' => 'required|max:2000',
+                'imagefile' => [
+                    // アップロードされたファイルであること
+                    'file',
+                    // 画像ファイルであること
+                    'image',
+                    // MIMEタイプを指定
+                    'mimes:jpeg,png',
+                ]
             ]);
         }
         
-        Post::create($params);
+        $post=Post::create($params);
 
+        if( isset( $params['imagefile'] ) ) {
+            $dir = $post->id;
+            $file =  $request->file('imagefile');
+            $fileName = $file->getClientOriginalName();
+            $request->file('imagefile')->storeAS('post/'.$dir,$fileName);
+              
+            $post->image_path = 'post/'.$dir.'/'.$fileName;
+            $post->save();
+        }
+        
         return redirect()->route('top');
     }
 
     public function show($post_id)
     {
         $post = Post::findOrFail($post_id);
-
         return view('posts.show', [
             'post' => $post,
         ]);
@@ -52,7 +77,6 @@ class PostsController extends Controller
     public function edit($post_id)
     {
         $post = Post::findOrFail($post_id);
-
         return view('posts.edit', [
             'post' => $post,
         ]);
@@ -63,8 +87,25 @@ class PostsController extends Controller
         $params = $request->validate([
             'title' => 'required|max:50',
             'body' => 'required|max:2000',
+            'imagefile' => [
+                // アップロードされたファイルであること
+                'file',
+                // 画像ファイルであること
+                'image',
+                // MIMEタイプを指定
+                'mimes:jpeg,png',
+            ]
         ]);
         $post = Post::findOrFail($post_id);
+        
+        if( isset( $params['imagefile'] ) ) {
+            $this->delete_image($post->image_path);
+            $dir = $post->id;
+            $file =  $request->file('imagefile');
+            $fileName = $file->getClientOriginalName();
+            $request->file('imagefile')->storeAS('post/'.$dir,$fileName);
+            $post->image_path = 'post/'.$dir.'/'.$fileName;
+        }
         $post->fill($params)->save();
         return redirect()->route('posts.show', ['post' => $post]);
     }
@@ -72,12 +113,21 @@ class PostsController extends Controller
     public function destroy($post_id)
     {
         $post = Post::findOrFail($post_id);
-
         \DB::transaction(function () use ($post) {
+            $this->delete_image($post->image_path);
             $post->comments()->delete();
             $post->delete();
         });
-
         return redirect()->route('top');
     }
+
+    public function delete_image($image){
+        //imageの例. post/{{$post->id}}/[image name]
+        $image_path = 'storage/app/public/'.$image;
+        if(file_exists ($image_path)){
+            unlink($image_path);
+        }
+    }
+
+
 }
