@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Post;
 use App\User;
+use App\Favorite;
 use Auth;
 
 class PostsController extends Controller
@@ -74,6 +75,31 @@ class PostsController extends Controller
         ]);
     }
 
+    public function setFavorite(int $post_id)
+    {
+        $post = Post::findOrFail($post_id);
+        $user_id = Auth::id();
+        $favorite = Favorite::create(['post_id'=>$post_id,'user_id'=>Auth::id()]);
+        return redirect()->route('posts.show', ['post' => $post]);
+    }
+    public function removeFavorite(int $post_id)
+    {
+        $post = Post::findOrFail($post_id);
+        $user_id = Auth::id();
+        $favorite_count = Favorite::where('user_id', $user_id)->where('post_id', $post_id);
+        \DB::transaction(function () use ($favorite_count) {
+            $favorite_count->delete();
+        });
+        return redirect()->route('posts.show', ['post' => $post]);
+    }
+    public function viewFavorite()
+    {
+        $posts = Post::orderBy('created_at', 'desc')->paginate(10);
+        //dump("test");
+        return view('posts.index_favorite', ['posts' => $posts]);
+    }
+    
+  
     public function edit($post_id)
     {
         $post = Post::findOrFail($post_id);

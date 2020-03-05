@@ -15,25 +15,37 @@
                 <img src="{{ asset('storage/'.$post->image_path) }}" style="max-width:25%; max-height:30%" />
             </p>
             @endif
+            
             <div class="mb-4 ">
-                <a href="/" class="btn btn-outline-primary">お気に入りに追加</a>
-                @if($post->user_id == Auth::id())
+                @if(Auth::id()!=null)
+                    @if( $post->isFavorite() )
+                        <span>お気に入り済み</span><br/>
+                        <a href="{{url('posts/favorite/remove/'.$post->id)}}" class="btn btn-primary">お気に入りを削除</a>
+                    @else
+                        <a href="{{url('posts/favorite/'.$post->id)}}" class="btn btn-outline-primary">お気に入りに追加</a>
+                    @endif
                     <div class="float-right">
-                    <a class="btn btn-primary" href="{{ route('posts.edit', ['post' => $post]) }}">
-                        編集する
-                    </a>
-                
-                    <form
-                        style="display: inline-block;"
-                        method="POST"
-                        action="{{ route('posts.destroy', ['post' => $post]) }}"
-                    >
-                        @csrf
-                        @method('DELETE')
+                        @if($post->user_id == Auth::id())
+                            
+                            <a class="btn btn-primary" href="{{ route('posts.edit', ['post' => $post]) }}">
+                                編集する
+                            </a>
+                        
+                            <form
+                                style="display: inline-block;"
+                                method="POST"
+                                action="{{ route('posts.destroy', ['post' => $post]) }}"
+                            >
+                                @csrf
+                                @method('DELETE')
 
-                        <button class="btn btn-danger">削除する</button>
-                    </form>
-                </dic>
+                                <button class="btn btn-danger">削除する</button>
+                            </form>
+                        @endif    
+                    </dic>
+                @else
+                    <span class="">会員登録すると自分で投稿した記事を編集できます。<br/>
+                    会員登録するとお気に入り機能が使用できます。</span>
                 @endif
             </div>
             

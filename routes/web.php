@@ -11,21 +11,15 @@
 |
 */
 
-#Route::get('/', function () {return view('welcome');});
 Route::get('/', 'PostsController@index')->name('top');
 
-Route::resource('posts', 'PostsController', ['only' => ['create', 'store']]);
-Route::resource('posts', 'PostsController', ['only' => ['create', 'store', 'show']]);
-
 Route::resource('comments', 'CommentsController', ['only' => ['store']]);
-Route::resource('posts', 'PostsController', ['only' => ['create', 'store', 'show', 'edit', 'update']]);
 Route::resource('posts', 'PostsController', ['only' => ['create', 'store', 'show', 'edit', 'update', 'destroy']]);
+//お気に入り
+Route::get('posts/favorite/{post_id}','PostsController@setFavorite');
+Route::get('posts/favorite/remove/{post_id}','PostsController@removeFavorite');
+Route::get('/favoriteList','PostsController@viewFavorite');
 
-/*
-Route::get('/home', function () {
-    return redirect('/');
-});
-*/
 //会員登録
 Route::get('auth/register','Auth\RegisterController@showRegistrationForm');
 Route::post('auth/register','Auth\RegisterController@register');

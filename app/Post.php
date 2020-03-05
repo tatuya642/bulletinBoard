@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 
+
 class Post extends Model
 {
     protected $fillable = [
@@ -29,6 +30,18 @@ class Post extends Model
             }else{
                 return \App\User::find($id)->name. "さん";
             }
+        }
+    }
+    public function isFavorite()
+    {
+        $favorite_count = \App\Favorite::where('user_id', Auth::id())->where('post_id', $this->id)->count();
+        //dump($favorite_count);
+        if($favorite_count==0){
+            //お気に入りじゃない
+            return false;
+        }else{
+            //お気に入り
+            return true;
         }
     }
     
