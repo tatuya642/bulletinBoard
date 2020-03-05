@@ -19,15 +19,19 @@
 
             <label for="inputEmail" class="sr-only">名前</label>
             <input type="text" name='name' id="inputEmail" class="form-control" value="{{old('name')}}" placeholder="名前" required autofocus>
+            <span class="text-danger">{{$errors->first('name')}}</span>
 
             <label for="inputEmail" class="sr-only">Emailアドレス</label>
             <input type="email" name='email' id="inputEmail" class="form-control" value="{{old('email')}}" placeholder="Emailアドレス" required autofocus>
-            
+            <span class="text-danger">{{$errors->first('email')}}</span>
+
             <label for="inputPassword" class="sr-only">パスワード</label>
             <input type="password" name='password' id="inputPassword" class="form-control" placeholder="パスワード" required>
-            
+            <span class="text-danger">{{$errors->first('password')}}</span>
+
             <label for="inputPassword" class="sr-only">パスワード(確認)</label>
             <input type="password" name='password_confirmation' id="inputPassword" class="form-control" placeholder="パスワード(確認)" required>
+            <span class="text-danger">{{$errors->first('password_confirmation')}}</span>
 
             <br/>
             <button class="btn btn-lg btn-primary btn-block" type="submit" name='action' value='send'>登録</button>
